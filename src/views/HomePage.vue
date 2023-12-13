@@ -51,6 +51,8 @@ export default {
       quoteTextTokens: [],
 
       charIndex: 0,
+
+      count: 0
     }
   },
   computed: {

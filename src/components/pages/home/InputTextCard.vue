@@ -6,7 +6,7 @@
           v-model="text"
           :readonly="endOfTheTest"
           :disabled="loadingQuote"
-          @input.native="inputHandler"
+          @input.native="debouncedInputHandler"
           @keydown.native="keydownHandler"
       >
       </el-input>
@@ -19,12 +19,16 @@
 <script>
 import {mapState, mapMutations} from "vuex";
 
+import debounce from "@/utils/debounce";
+
 export default {
   name: "InputTextCard",
   data() {
     return {
       intervalId: null,
       text: '',
+
+      debouncedInputHandler: null,
 
       startTimeForSeconds: null,
       startTimeForMinutes: null,
@@ -48,10 +52,13 @@ export default {
       }
     }
   },
+  created() {
+    this.debouncedInputHandler = debounce(this.inputHandler, 10)
+  },
   methods: {
     ...mapMutations(['setSpeed']),
 
-    inputHandler() {
+    inputHandler(e) {
       ++this.countOfSymbolsInSeconds
       ++this.countOfSymbolsInMinutes
 
@@ -63,10 +70,10 @@ export default {
         this.intervalId = setInterval(this.updateSpeed, 1000)
       }
 
-      this.$emit('input', this.text)
+      this.$emit('input', e.target.value)
     },
     keydownHandler(e) {
-      if (e.key === 'Backspace') {
+      if (e.key === 'Backspace' || e.key === 'Delete' || e.ctrlKey) {
         e.preventDefault()
       }
     },

@@ -5,8 +5,9 @@
 npm install
 ```
 
-### Compiles and hot-reloads for development
+### Start proxy, compiles and hot-reloads for development
 ```
+node proxy/proxy.js
 npm run serve
 ```
 
